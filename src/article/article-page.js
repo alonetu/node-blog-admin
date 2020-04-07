@@ -1,21 +1,20 @@
-const net = require('./database');
+const net = require('../database');
 
 /**
- * 用户管理界面接口调用
+ * 博客页面接口调用
  */
 
 /**
  * 获取所有的数据
  */
-net.app.get('/getusers', (req, res) => {
-  // cors 解决跨域问题	'*': 即允许所有客户端进行跨域
+net.app.get('/getarticles', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
   // 定义SQL语句
-  const sqlStr = 'select * from user'
+  const sqlStr = 'select * from article'
   net.connection.query(sqlStr, (err, results) => {
-      if(err) {
+      if (err) {
           return res.json({ message: '获取失败' })
-      } 
+      }
       res.json({ code:200, message: results })
   })
 })
@@ -23,11 +22,10 @@ net.app.get('/getusers', (req, res) => {
 /**
  * 根据id来获取数据
  */
-net.app.get('/getuserbyid', (req, res) => {
+net.app.get('/getarticlebyid', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
-  console.log(req.query);
   const id = req.query.id
-  const sqlStr = 'select * from user where id=?'
+  const sqlStr = 'select * from article where id=?'
   net.connection.query(sqlStr, id, (err, results) => {
       if (err) {
           return res.json({ message: '获取数据失败' })
@@ -35,23 +33,21 @@ net.app.get('/getuserbyid', (req, res) => {
       if (results.length !== 1) {
           return res.json({ message: '数据不存在' })
       }
-      res.json({ code:200, message: results })
+      res.json({ code:200, message: results[0] })
   })
 })
 
 /**
- * 根据user_name来获取数据
+ * 根据作者来获取数据
  */
-net.app.get('/getuserbyusername', (req, res) => {
+net.app.get('/getarticlebyauthor', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
-  const user_name = req.query.user_name
-  const sqlStr = 'select * from user where user_name=?'
-  net.connection.query(sqlStr, user_name, (err, results) => {
+  const article_author = req.query.article_author
+  const sqlStr = 'select * from article where article_author=?'
+  net.connection.query(sqlStr, article_author, (err, results) => {
+  // console.log(results)
       if (err) {
           return res.json({ message: '获取数据失败' })
-      }
-      if (results.length !== 1) {
-          return res.json({ message: '数据不存在' })
       }
       res.json({ code:200, message: results })
   })
@@ -60,30 +56,30 @@ net.app.get('/getuserbyusername', (req, res) => {
 /**
  * 根据id来删除数据
  */
-net.app.get('/deleteuserbyid', (req, res) => {
+net.app.get('/deletearticlebyid', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
   const id = req.query.id
-  const sqlStr = 'delete from user where id=?'
+  const sqlStr = 'delete from article where id=?'
   net.connection.query(sqlStr, id, (err, results) => {
       if (err) {
           return res.json({ message: '删除数据失败' })
       }
       if (results.affectedRows !== 1) {
-          return res.json({ message: '删除数据失败' })
+          return res.json({ message: '删除数据成功' })
       }
-      res.json({code:200, message: '删除成功', affectedRows: results.affectedRows })
+      res.json({ code:200, message: '删除成功', affectedRow: results.affectedRows })
   })
 })
 
 /**
  * 添加数据
  */
-net.app.post('/adduser', (req, res) => {
+net.app.post('/addarticle', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
-  const user = req.body
-  console.log(user)
-  const sqlStr = 'insert into user set ?'
-  net.connection.query(sqlStr, user, (err, results) => {
+  const article = req.body
+  console.log(article)
+  const sqlStr = 'insert into article set ?'
+  net.connection.query(sqlStr, article, (err, results) => {
       if (err) {
           return res.json({ message: '添加失败' })
       }
@@ -97,9 +93,9 @@ net.app.post('/adduser', (req, res) => {
 /**
  * 修改数据
  */
-net.app.post('/updateuser', (req, res) => {
+net.app.post('/updatearticle', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*')
-  const sqlStr = 'update user set ? where id = ?'
+  const sqlStr = 'update article set ? where id = ?'
   net.connection.query(sqlStr, [req.body, req.body.id], (err, results) => {
       if (err) {
           return res.json({ message: '更新数据失败' })
