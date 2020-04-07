@@ -22,6 +22,7 @@ net.app.get('/getusers', (req, res) => {
 
 /**
  * 根据id来获取数据
+ * @param id 用户id
  */
 net.app.get('/getuserbyid', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -41,6 +42,7 @@ net.app.get('/getuserbyid', (req, res) => {
 
 /**
  * 根据user_name来获取数据
+ * @param user_name 用户名
  */
 net.app.get('/getuserbyusername', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -59,6 +61,7 @@ net.app.get('/getuserbyusername', (req, res) => {
 
 /**
  * 根据id来删除数据
+ * @param id 用户id
  */
 net.app.get('/deleteuserbyid', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -77,6 +80,12 @@ net.app.get('/deleteuserbyid', (req, res) => {
 
 /**
  * 添加数据
+ * @param user_cname 中文用户名
+ * @param user_name 用户账号
+ * @param user_password 用户密码
+ * @param user_department 用户部门
+ * @param user_role 用户角色
+ * @param article_count 博客总数
  */
 net.app.post('/adduser', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -96,6 +105,13 @@ net.app.post('/adduser', (req, res) => {
 
 /**
  * 修改数据
+ * @param id 用户id
+ * @param user_cname 中文用户名
+ * @param user_name 用户账号
+ * @param user_password 用户密码
+ * @param user_department 用户部门
+ * @param user_role 用户角色
+ * @param article_count 博客总数
  */
 net.app.post('/updateuser', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*')
