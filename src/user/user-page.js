@@ -27,13 +27,19 @@ net.app.get('/getusers', (req, res) => {
 
 /**
  * 分页获取用户列表
+ * @param pageNo 页码
+ * @param pageSize 页数
+ * @param sortField 排序字段
+ * @param sort 排序方式
  */
 net.app.get('/getuserlist', (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     const pageNo = req.query.pageNo;
     const pageSize = req.query.pageSize;
     const page = (pageNo - 1) * pageSize;
-    const sqlStr = `select * from user limit ${page}, ${pageSize};`
+    const sortField = req.query.sortField===''? 'id': req.query.sortField;
+    const sort = req.query.sort;
+    const sqlStr = `select * from user order by ${sortField} ${sort} limit ${page}, ${pageSize};`
     const selectAll = 'select * from user';
     let pageTotal = 0;
     net.connection.query(selectAll, (err, results) => {
@@ -93,7 +99,11 @@ net.app.get('/getuserbyusername', (req, res) => {
         if (results.length !== 1) {
             return res.json({ message: '数据不存在' })
         }
-        res.json({ code: 200, message: results })
+        res.json({ 
+            code: 200, 
+            message: results,
+            pageTotal: results.length,
+        })
     })
 })
 
@@ -158,9 +168,10 @@ net.app.post('/updateuser', (req, res) => {
         if (err) {
             return res.json({ message: '更新数据失败' })
         }
-        if (results.affectedRows !== 1) {
-            return res.json({ message: '数据不存在' })
-        }
-        res.json({ code: 200, message: '更新成功', affectedRows: results.affectedRows })
+        res.json({ 
+            code: 200, 
+            message: '更新成功', 
+            affectedRows: results.affectedRows 
+        })
     })
 })
