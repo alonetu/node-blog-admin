@@ -83,6 +83,32 @@ net.app.get('/getuserbyid', (req, res) => {
 })
 
 /**
+ * 模糊搜索
+ * @param keyword 搜索关键字
+ */
+
+net.app.get('/getuserbykeyword', (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    const keyword = req.query.keyword;
+    const sqlStr = `select * from user where user_cname like '%${keyword}%' 
+                                        or user_name  like '%${keyword}%'
+                                        or user_department  like '%${keyword}%'
+                                        or user_role  like '%${keyword}%'
+                                        or create_time  like '%${keyword}%'
+                                        or update_time  like '%${keyword}%'`
+    net.connection.query(sqlStr, keyword, (err, results) => {
+        if(err) {
+            return res.json({ message: '获取数据失败' })
+        }
+        res.json({ 
+            code: 200, 
+            message: results,
+            pageTotal: results.length,
+        })
+    })
+})
+
+/**
  * 根据user_name来获取数据
  * @param user_name 用户名
  */
