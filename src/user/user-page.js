@@ -1,61 +1,57 @@
 const net = require('../database');
+const sql = require('../sql/index');
+const {getAllDataByKeyword, getDataByKeyword} = require('../sql/user');
 
 /**
  * 用户管理界面接口调用
+ * cors 解决跨域问题	'*': 即允许所有客户端进行跨域
+ * res.set('Access-Control-Allow-Origin', '*');
  */
 
-/**
- * 获取所有的数据
- */
-net.app.get('/getusers', (req, res) => {
-    // cors 解决跨域问题	'*': 即允许所有客户端进行跨域
-    res.set('Access-Control-Allow-Origin', '*');
-    // 定义SQL语句
-    const sql = 'select * from user';
-    net.connection.query(sql, (err, results) => {
-        if (err) {
-            return res.json({ message: '获取失败' })
-        }
-        res.json({ 
-            code: 200, 
-            message: results,
-            pageTotal: results.length
-        })
-    })
-})
+// 对user表进行增删改查
+const table = 'user';
 
 /**
- * 分页获取用户列表
- * @param pageNo 页码
- * @param pageSize 页数
- * @param sortField 排序字段
- * @param sort 排序方式
+ * 分页获取用户列表, 模糊搜索
+ * @param {string} sortField  排序字段
+ * @param {string} sort  排序方式
+ * @param {number} page  从page条数据开始查询
+ * @param {number} pageSize  每页条数
+ * @param (string) keyword 搜索关键字
  */
 net.app.get('/getuserlist', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
     const pageNo = req.query.pageNo;
     const pageSize = req.query.pageSize;
     const page = (pageNo - 1) * pageSize;
-    const sortField = req.query.sortField===''? 'id': req.query.sortField;
+    const sortField = req.query.sortField === '' ? 'id' : req.query.sortField;
     const sort = req.query.sort;
-    const sqlStr = `select * from user order by ${sortField} ${sort} limit ${page}, ${pageSize}`;
-    const selectAll = 'select * from user';
+    const keyword = req.query.keyword;
+    let AllInfo = '';
+    let ListInfo = '';
+    if(!keyword) {
+        AllInfo = sql.getAll(table);
+        ListInfo = sql.getList(table, sortField, sort, page, pageSize);
+    }else {
+        AllInfo = getAllDataByKeyword(table, keyword);
+        ListInfo = getDataByKeyword(table, keyword, sortField, page, pageSize);
+    }
     let pageTotal = 0;
-    net.connection.query(selectAll, (err, results) => {
+    net.connection.query(AllInfo, (err, results) => {
         if (err) {
-            return res.json({ message: '获取失败' })
+            return res.json({ message: err })
         }
         pageTotal = results.length;
     })
-    net.connection.query(sqlStr, pageSize, (err, results) => {
-        if(err) {
-            return res.json({ 
+    net.connection.query(ListInfo, (err, results) => {
+        if (err) {
+            return res.json({
                 message: err
             })
         }
-        res.json({ 
+        res.json({
             code: 200,
-            message: results,
+            message: '获取用户信息成功',
+            data: results,
             pageTotal,
             pageNo,
             pageSize
@@ -65,134 +61,86 @@ net.app.get('/getuserlist', (req, res) => {
 
 /**
  * 根据id来获取数据
- * @param id 用户id
+ * @param (number) id 用户id
  */
 net.app.get('/getuserbyid', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
+    const field = 'id';
     const id = req.query.id;
-    const sqlStr = 'select * from user where id=?';
-    net.connection.query(sqlStr, id, (err, results) => {
+    net.connection.query(sql.getInfoByField(table, field), id, (err, results) => {
         if (err) {
-            return res.json({ message: '获取数据失败' })
-        }
-        if (results.length !== 1) {
-            return res.json({ message: '数据不存在' })
-        }
-        res.json({ code: 200, message: results })
-    })
-})
-
-/**
- * 模糊搜索
- * @param keyword 搜索关键字
- */
-
-net.app.get('/getuserbykeyword', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    const keyword = req.query.keyword;
-    const sqlStr = `select * from user where user_cname like '%${keyword}%' 
-                                        or user_name  like '%${keyword}%'
-                                        or user_department  like '%${keyword}%'
-                                        or user_role  like '%${keyword}%'
-                                        or create_time  like '%${keyword}%'
-                                        or update_time  like '%${keyword}%'`
-    net.connection.query(sqlStr, keyword, (err, results) => {
-        if(err) {
-            return res.json({ message: '获取数据失败' })
+            return res.json({ message: err })
         }
         res.json({ 
             code: 200, 
-            message: results,
-            pageTotal: results.length,
-        })
-    })
-})
-
-/**
- * 根据user_name来获取数据
- * @param user_name 用户名
- */
-net.app.get('/getuserbyusername', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    const user_name = req.query.user_name;
-    const sqlStr = 'select * from user where user_name=?';
-    net.connection.query(sqlStr, user_name, (err, results) => {
-        if (err) {
-            return res.json({ message: '获取数据失败' })
-        }
-        if (results.length !== 1) {
-            return res.json({ message: '数据不存在' })
-        }
-        res.json({ 
-            code: 200, 
-            message: results,
-            pageTotal: results.length,
+            message: '获取用户信息成功',
+            data: results,
+            pageTotal: results.length
         })
     })
 })
 
 /**
  * 根据id来删除数据
- * @param id 用户id
+ * @param (number) id 用户id
  */
 net.app.get('/deleteuserbyid', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
+    const field = 'id';
     const id = req.query.id;
-    const sqlStr = 'delete from user where id=?';
-    net.connection.query(sqlStr, id, (err, results) => {
+    net.connection.query(sql.delByField(table, field), id, (err, results) => {
         if (err) {
-            return res.json({ message: '删除数据失败' })
+            return res.json({ message: err })
         }
-        if (results.affectedRows !== 1) {
-            return res.json({ message: '删除数据失败' })
-        }
-        res.json({ code: 200, message: '删除成功', affectedRows: results.affectedRows })
+        res.json({ 
+            code: 200, 
+            message: '删除用户信息成功', 
+            affectedRows: results.affectedRows
+        })
     })
 })
 
 /**
  * 添加数据
- * @param user_cname 中文用户名
- * @param user_name 用户账号
- * @param user_password 用户密码
- * @param user_department 用户部门
- * @param user_role 用户角色
+ * @param (string) user_cname 中文用户名
+ * @param (string) user_name 用户账号
+ * @param (string) user_password 用户密码
+ * @param (string) user_department 用户部门
+ * @param (string) user_role 用户角色
  */
 net.app.post('/adduser', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    const user = req.body;
-    const sqlStr = 'insert into user set ?';
-    net.connection.query(sqlStr, user, (err, results) => {
+    const data = req.body;
+    net.connection.query(sql.addData(table), data, (err, results) => {
         if (err) {
-            return res.json({ message: '添加失败' })
+            return res.json({ message: err })
         }
-        if (results.affectedRows !== 1) {
-            return res.json({ message: '添加失败' })
-        }
-        res.json({ code: 200, message: '添加成功', affectedRows: results.affectedRows })
+        res.json({ 
+            code: 200, 
+            message: '添加用户信息成功', 
+            affectedRows: results.affectedRows 
+        })
     })
 })
 
 /**
  * 修改数据
- * @param id 用户id
- * @param user_cname 中文用户名
- * @param user_name 用户账号
- * @param user_password 用户密码
- * @param user_department 用户部门
- * @param user_role 用户角色
+ * @param (number) id 用户id
+ * @param (string) user_cname 中文用户名
+ * @param (string) user_name 用户账号
+ * @param (string) user_password 用户密码
+ * @param (string) user_department 用户部门
+ * @param (string) user_role 用户角色
  */
 net.app.post('/updateuser', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    const sqlStr = 'update user set ? where id = ?';
-    net.connection.query(sqlStr, [req.body, req.body.id], (err, results) => {
+    const field = 'id';
+    const data = req.body;
+    const id = req.body.id;
+    net.connection.query(sql.updateData(table, field), [data, id], (err, results) => {
         if (err) {
-            return res.json({ message: '更新数据失败' })
+            return res.json({ message: err })
         }
-        res.json({ 
-            code: 200, 
-            message: '更新成功', 
-            affectedRows: results.affectedRows 
+        res.json({
+            code: 200,
+            message: '修改用户信息成功',
+            affectedRows: results.affectedRows
         })
     })
 })
