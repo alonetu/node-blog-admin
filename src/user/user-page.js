@@ -1,5 +1,5 @@
-const net = require('../database');
-const sql = require('../sql/index');
+const {app, connection} = require('../database');
+const {getAll, getList, getInfoByField, delByField, addData, updateData} = require('../sql/index');
 const {getAllDataByKeyword, getDataByKeyword} = require('../sql/user');
 
 /**
@@ -19,7 +19,7 @@ const table = 'user';
  * @param {number} pageSize  每页条数
  * @param (string) keyword 搜索关键字
  */
-net.app.get('/getuserlist', (req, res) => {
+app.get('/getuserlist', (req, res) => {
     const pageNo = req.query.pageNo;
     const pageSize = req.query.pageSize;
     const page = (pageNo - 1) * pageSize;
@@ -29,20 +29,20 @@ net.app.get('/getuserlist', (req, res) => {
     let AllInfo = '';
     let ListInfo = '';
     if(!keyword) {
-        AllInfo = sql.getAll(table);
-        ListInfo = sql.getList(table, sortField, sort, page, pageSize);
+        AllInfo = getAll(table);
+        ListInfo = getList(table, sortField, sort, page, pageSize);
     }else {
         AllInfo = getAllDataByKeyword(table, keyword);
         ListInfo = getDataByKeyword(table, keyword, sortField, sort, page, pageSize);
     }
     let pageTotal = 0;
-    net.connection.query(AllInfo, (err, results) => {
+    connection.query(AllInfo, (err, results) => {
         if (err) {
             return res.json({ message: err })
         }
         pageTotal = results.length;
     })
-    net.connection.query(ListInfo, (err, results) => {
+    connection.query(ListInfo, (err, results) => {
         if (err) {
             return res.json({
                 message: err
@@ -63,10 +63,10 @@ net.app.get('/getuserlist', (req, res) => {
  * 根据id来获取数据
  * @param (number) id 用户id
  */
-net.app.get('/getuserbyid', (req, res) => {
+app.get('/getuserbyid', (req, res) => {
     const field = 'id';
     const id = req.query.id;
-    net.connection.query(sql.getInfoByField(table, field), id, (err, results) => {
+    connection.query(getInfoByField(table, field), id, (err, results) => {
         if (err) {
             return res.json({ message: err })
         }
@@ -83,10 +83,10 @@ net.app.get('/getuserbyid', (req, res) => {
  * 根据id来删除数据
  * @param (number) id 用户id
  */
-net.app.get('/deleteuserbyid', (req, res) => {
+app.get('/deleteuserbyid', (req, res) => {
     const field = 'id';
     const id = req.query.id;
-    net.connection.query(sql.delByField(table, field), id, (err, results) => {
+    connection.query(delByField(table, field), id, (err, results) => {
         if (err) {
             return res.json({ message: err })
         }
@@ -106,9 +106,9 @@ net.app.get('/deleteuserbyid', (req, res) => {
  * @param (string) user_department 用户部门
  * @param (string) user_role 用户角色
  */
-net.app.post('/adduser', (req, res) => {
+app.post('/adduser', (req, res) => {
     const data = req.body;
-    net.connection.query(sql.addData(table), data, (err, results) => {
+    connection.query(addData(table), data, (err, results) => {
         if (err) {
             return res.json({ message: err })
         }
@@ -129,11 +129,11 @@ net.app.post('/adduser', (req, res) => {
  * @param (string) user_department 用户部门
  * @param (string) user_role 用户角色
  */
-net.app.post('/updateuser', (req, res) => {
+app.post('/updateuser', (req, res) => {
     const field = 'id';
     const data = req.body;
     const id = req.body.id;
-    net.connection.query(sql.updateData(table, field), [data, id], (err, results) => {
+    connection.query(updateData(table, field), [data, id], (err, results) => {
         if (err) {
             return res.json({ message: err })
         }
