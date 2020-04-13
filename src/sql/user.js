@@ -6,11 +6,11 @@ module.exports = {
    */
   getAllDataByKeyword(table,keyword) {
     return `select * from ${table} where user_cname like '%${keyword}%' 
-                                or user_name  like '%${keyword}%'
-                                or user_department  like '%${keyword}%'
-                                or user_role  like '%${keyword}%'
-                                or create_time  like '%${keyword}%'
-                                or update_time  like '%${keyword}%'`;
+                                      or user_name  like '%${keyword}%'
+                                      or user_department  like '%${keyword}%'
+                                      or user_role  like '%${keyword}%'
+                                      or create_time  like '%${keyword}%'
+                                      or update_time  like '%${keyword}%'`;
   },
   /**
    * 模糊搜索
@@ -22,12 +22,12 @@ module.exports = {
    * @param {string} keyword  搜索关键字
    */
   getDataByKeyword(table, keyword, sortField, sort, page, pageSize) {
-    return `select * from ${table} where user_cname like '%${keyword}%' 
-                                    or user_name  like '%${keyword}%'
-                                    or user_department  like '%${keyword}%'
-                                    or user_role  like '%${keyword}%'
-                                    or create_time  like '%${keyword}%'
-                                    or update_time  like '%${keyword}%'
-                                    order by ${sortField} ${sort} limit ${page}, ${pageSize}`;
+    return `select * from ${table} where user_cname like '%${keyword}%'
+                                      or user_name  like '%${keyword}%'
+                                      or user_department  like '%${keyword}%'
+                                      or user_role  like '%${keyword}%'
+                                      or create_time  like '%${keyword}%'
+                                      or update_time  like '%${keyword}%'
+                                      order by ${sortField} ${sort} limit ${page}, ${pageSize}`;
   }
 }
