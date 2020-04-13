@@ -33,7 +33,7 @@ net.app.get('/getuserlist', (req, res) => {
         ListInfo = sql.getList(table, sortField, sort, page, pageSize);
     }else {
         AllInfo = getAllDataByKeyword(table, keyword);
-        ListInfo = getDataByKeyword(table, keyword, sortField, page, pageSize);
+        ListInfo = getDataByKeyword(table, keyword, sortField, sort, page, pageSize);
     }
     let pageTotal = 0;
     net.connection.query(AllInfo, (err, results) => {
