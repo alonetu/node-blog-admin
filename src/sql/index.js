@@ -41,6 +41,12 @@ module.exports = {
     return `delete from ${table} where ${field} = ?`;
   },
   /**
+   * 批量删除
+   */
+  delBatch(table, field, fieldValue) {
+    return `delete from ${table} where ${field} in (${fieldValue})`;
+  },
+  /**
    * 添加数据
    * @param {string} table 
    */
