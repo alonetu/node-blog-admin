@@ -3,10 +3,6 @@
  */
 module.exports = {
   /**
-   *  
-   */
-   getDataByKeyword() {},
-  /**
    * 获取表中所有数据
    * @param {string} table 查询表
    */
@@ -26,37 +22,40 @@ module.exports = {
   },
   /**
    * 根据字段获取数据
-   * @param {string} table 
-   * @param {string} field 
+   * @param {string} table  查询表
+   * @param {string} field  查询字段
    */
   getInfoByField(table, field) {
     return `select * from ${table} where ${field} = ?`;
   },
   /**
    * 根据字段删除数据
-   * @param {string} table 
-   * @param {string} field 
+   * @param {string} table  查询表
+   * @param {string} field  查询字段
    */
   delByField(table, field) {
     return `delete from ${table} where ${field} = ?`;
   },
   /**
    * 批量删除
+   * @param {string} table  查询表
+   * @param {string} field  查询字段
+   * @param {string} fieldValue  查询字段值
    */
   delBatch(table, field, fieldValue) {
     return `delete from ${table} where ${field} in (${fieldValue})`;
   },
   /**
    * 添加数据
-   * @param {string} table 
+   * @param {string} table 插入表
    */
   addData(table) {
     return `insert into ${table} set ?`;
   },
   /**
    * 修改数据
-   * @param {string} table 
-   * @param {string} field 
+   * @param {string} table 更新表
+   * @param {string} field 查询字段
    */
   updateData(table, field) {
     return `update ${table} set ? where ${field} = ?`;
