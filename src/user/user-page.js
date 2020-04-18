@@ -78,6 +78,31 @@ app.get('/getuserbyid', (req, res) => {
 })
 
 /**
+ * 根据user_name来获取数据
+ * @param {string} user_name user_name
+ */
+app.get('/getuserbyusername', (req, res) => {
+    const field = 'user_name';
+    const user_name = req.query.user_name;
+    connection.query(getInfoByField(table, field), user_name, (err, results) => {
+        if (err) {
+            return res.json({ message: err })
+        }
+        if (!results.length) {
+            return res.json({
+                code: 400,
+                message: '用户不存在'
+            })
+        }
+        res.json({ 
+            code: 200, 
+            message: '获取用户信息成功',
+            data: results
+        })
+    })
+})
+
+/**
  * 根据id来删除数据
  * @param {number} id 用户id
  */
