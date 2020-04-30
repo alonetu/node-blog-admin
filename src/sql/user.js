@@ -4,13 +4,13 @@ module.exports = {
    * @param {string} table 查询表
    * @param {string} keyword 搜索关键字
    */
-  getAllDataByKeyword(table,keyword) {
-    return `select * from ${table} where user_cname like '%${keyword}%' 
-                                      or user_name  like '%${keyword}%'
-                                      or user_department  like '%${keyword}%'
-                                      or user_role  like '%${keyword}%'
-                                      or create_time  like '%${keyword}%'
-                                      or update_time  like '%${keyword}%'`;
+  getAllDataByKeyword(table, keyword) {
+    return `select * from ${table} where cname like '%${keyword}%' 
+                                      or name  like '%${keyword}%'
+                                      or department  like '%${keyword}%'
+                                      or role  like '%${keyword}%'
+                                      or createTime  like '%${keyword}%'
+                                      or updateTime  like '%${keyword}%'`;
   },
   /**
    * 模糊搜索
@@ -22,12 +22,12 @@ module.exports = {
    * @param {string} keyword  搜索关键字
    */
   getDataByKeyword(table, keyword, sortField, sort, page, pageSize) {
-    return `select * from ${table} where user_cname like '%${keyword}%'
-                                      or user_name  like '%${keyword}%'
-                                      or user_department  like '%${keyword}%'
-                                      or user_role  like '%${keyword}%'
-                                      or create_time  like '%${keyword}%'
-                                      or update_time  like '%${keyword}%'
+    return `select * from ${table} where cname like '%${keyword}%'
+                                      or name  like '%${keyword}%'
+                                      or department  like '%${keyword}%'
+                                      or role  like '%${keyword}%'
+                                      or createTime  like '%${keyword}%'
+                                      or updateTime  like '%${keyword}%'
                                       order by ${sortField} ${sort} limit ${page}, ${pageSize}`;
   }
 }

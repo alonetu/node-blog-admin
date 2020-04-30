@@ -78,13 +78,13 @@ app.get('/getuserbyid', (req, res) => {
 })
 
 /**
- * 根据user_name来获取数据
- * @param {string} user_name user_name
+ * 根据name来获取数据
+ * @param {string} name name
  */
 app.get('/getuserbyusername', (req, res) => {
-    const field = 'user_name';
-    const user_name = req.query.user_name;
-    connection.query(getInfoByField(table, field), user_name, (err, results) => {
+    const field = 'name';
+    const name = req.query.name;
+    connection.query(getInfoByField(table, field), name, (err, results) => {
         if (err) {
             return res.json({ message: err })
         }
@@ -145,11 +145,11 @@ app.post('/delbatch', (req, res) => {
 
 /**
  * 添加数据
- * @param {string} user_cname 中文用户名
- * @param {string} user_name 用户账号
- * @param {string} user_password 用户密码
- * @param {string} user_department 用户部门
- * @param {string} user_role 用户角色
+ * @param {string} cname 中文用户名
+ * @param {string} name 用户账号
+ * @param {string} password 用户密码
+ * @param {string} department 用户部门
+ * @param {string} role 用户角色
  */
 app.post('/adduser', (req, res) => {
     const data = req.body;
@@ -168,11 +168,11 @@ app.post('/adduser', (req, res) => {
 /**
  * 修改数据
  * @param {number} id 用户id
- * @param {string} user_cname 中文用户名
- * @param {string} user_name 用户账号
- * @param {string} user_password 用户密码
- * @param {string} user_department 用户部门
- * @param {string} user_role 用户角色
+ * @param {string} cname 中文用户名
+ * @param {string} name 用户账号
+ * @param {string} password 用户密码
+ * @param {string} department 用户部门
+ * @param {string} role 用户角色
  */
 app.post('/updateuser', (req, res) => {
     const field = 'id';
