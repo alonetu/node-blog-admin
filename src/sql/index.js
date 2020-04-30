@@ -59,5 +59,15 @@ module.exports = {
    */
   updateData(table, field) {
     return `update ${table} set ? where ${field} = ?`;
+  },
+  /**
+   * 根据时间范围查询数据
+   * @param {string} table 查询表
+   * @param {string} field 查询字段 
+   * @param {string} startTime 开始时间
+   * @param {string} endTime 结束时间
+   */
+  getByTimeRange(table, field, startTime, endTime) {
+    return `select * from ${table} where ${field} > "${startTime}" and ${field} < "${endTime}"`;
   }
 }
