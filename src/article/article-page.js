@@ -25,3 +25,21 @@ app.get('/getarticlebytimerange', (req, res) => {
         })
     })
 })
+
+/**
+ * 根据id获取博客
+ */
+app.get('/getarticledetail', (req, res) => {
+    const field = 'id';
+    const id = req.query.id;
+    connection.query(getInfoByField(table, field), id, (err, results) => {
+        if(err) {
+            return res.json({ message: err })
+        }
+        res.json({
+            code: 200,
+            message: '获取博客信息成功',
+            data: results
+        })
+    })
+})
