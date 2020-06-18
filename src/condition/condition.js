@@ -1,12 +1,12 @@
-const {app, connection} = require('../database');
+const { app, connection } = require('../database');
 const {
-  getAll, 
-  getList, 
-  getInfoByField, 
-  delBatch, 
-  delByField, 
-  addData, 
-  updateData, 
+  getAll,
+  getList,
+  getInfoByField,
+  delBatch,
+  delByField,
+  addData,
+  updateData,
   getByTimeRange
 } = require('../sql/index');
 
@@ -26,14 +26,14 @@ const table = 'savesearch';
 app.post('/addsavesearch', (req, res) => {
   const data = req.body;
   connection.query(addData(table), data, (err, results) => {
-      if (err) {
-          return res.json({ message: err })
-      }
-      res.json({ 
-          code: 200, 
-          message: '保存信息成功', 
-          affectedRows: results.affectedRows 
-      })
+    if (err) {
+      return res.json({ message: err })
+    }
+    res.json({
+      code: 200,
+      message: '保存信息成功',
+      affectedRows: results.affectedRows
+    })
   })
 })
 
@@ -43,15 +43,15 @@ app.post('/addsavesearch', (req, res) => {
  */
 app.get('/getsavesearch', (req, res) => {
   connection.query(getAll(table), (err, results) => {
-      if (err) {
-          return res.json({ message: err })
-      }
-      res.json({ 
-          code: 200, 
-          message: '获取信息成功',
-          data: results,
-          pageTotal: results.length
-      })
+    if (err) {
+      return res.json({ message: err })
+    }
+    res.json({
+      code: 200,
+      message: '获取信息成功',
+      data: results,
+      pageTotal: results.length
+    })
   })
 })
 
@@ -64,13 +64,13 @@ app.get('/deletesearchbyid', (req, res) => {
   const field = 'id';
   const id = req.query.id;
   connection.query(delByField(table, field), id, (err, results) => {
-      if (err) {
-          return res.json({ message: err })
-      }
-      res.json({ 
-          code: 200, 
-          message: '删除信息成功', 
-          affectedRows: results.affectedRows
-      })
+    if (err) {
+      return res.json({ message: err })
+    }
+    res.json({
+      code: 200,
+      message: '删除信息成功',
+      affectedRows: results.affectedRows
+    })
   })
 })
