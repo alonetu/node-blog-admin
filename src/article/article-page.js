@@ -43,3 +43,26 @@ app.get('/getarticledetail', (req, res) => {
     })
   })
 })
+
+/**
+ * 添加数据
+ * @param {string} name 用户账号
+ * @param {string} title 博客名称
+ * @param {string} intro 博客简介
+ * @param {string} content 博客内容
+ * @param {string} createTime 创建时间
+ * @param {string} updateTime 更新时间
+ */
+app.post('/addblog', (req, res) => {
+  const data = req.body;
+  connection.query(addData(table), data, (err, results) => {
+    if (err) {
+      return res.json({ message: err })
+    }
+    res.json({
+      code: 200,
+      message: '添加博客信息成功',
+      affectedRows: results.affectedRows
+    })
+  })
+})
