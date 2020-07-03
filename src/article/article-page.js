@@ -8,12 +8,28 @@ const { getAll, getList, getInfoByField, delBatch, delByField, addData, updateDa
 const table = 'article';
 
 /**
+ * 查询所有博客
+ */
+app.get('/getarticlelist', (req, res) => {
+  connection.query(getAll(table), (err, results) => {
+    if (err) {
+      return res.json({ message: err })
+    }
+    res.json({
+      code: 200,
+      message: '获取博客信息成功',
+      data: results
+    })
+  })
+})
+
+/**
  * 根据时间范围搜索博客
  */
 app.get('/getarticlebytimerange', (req, res) => {
   const field = 'createTime';
-  const startTime = '2020-04-08 00:21:07';
-  const endTime = '2020-04-29 17:28:26';
+  const startTime = '2020-04-08 15:21:07';
+  const endTime = '2020-07-03 22:07:28';
   connection.query(getByTimeRange(table, field, startTime, endTime), (err, results) => {
     if (err) {
       return res.json({ message: err })
@@ -39,7 +55,7 @@ app.get('/getarticledetail', (req, res) => {
     res.json({
       code: 200,
       message: '获取博客信息成功',
-      data: JSON.stringify(results)
+      data: results
     })
   })
 })
