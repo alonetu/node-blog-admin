@@ -16,7 +16,7 @@ app.get('/getarticlelist', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '获取博客信息成功',
       data: results
     })
@@ -35,7 +35,7 @@ app.get('/getarticlebytimerange', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '获取博客信息成功',
       data: results
     })
@@ -53,7 +53,7 @@ app.get('/getarticledetail', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '获取博客信息成功',
       data: results
     })
@@ -76,7 +76,7 @@ app.post('/addblog', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '添加博客信息成功',
       affectedRows: results.affectedRows
     })

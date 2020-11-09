@@ -47,7 +47,7 @@ app.get('/getuserlist', (req, res) => {
       })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '获取用户信息成功',
       data: results,
       pageTotal,
@@ -69,7 +69,7 @@ app.get('/getuserbyid', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '获取用户信息成功',
       data: results,
       pageTotal: results.length
@@ -95,7 +95,7 @@ app.get('/getuserbyusername', (req, res) => {
       })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '获取用户信息成功',
       data: results
     })
@@ -114,7 +114,7 @@ app.get('/deleteuserbyid', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '删除用户信息成功',
       affectedRows: results.affectedRows
     })
@@ -136,7 +136,7 @@ app.post('/delbatch', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '删除用户信息成功',
       affectedRows: results.affectedRows
     })
@@ -158,7 +158,7 @@ app.post('/adduser', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '添加用户信息成功',
       affectedRows: results.affectedRows
     })
@@ -183,7 +183,7 @@ app.post('/updateuser', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '修改用户信息成功',
       affectedRows: results.affectedRows
     })

@@ -30,7 +30,7 @@ app.post('/addsavesearch', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '保存信息成功',
       affectedRows: results.affectedRows
     })
@@ -47,7 +47,7 @@ app.get('/getsavesearch', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '获取信息成功',
       data: results,
       pageTotal: results.length
@@ -68,7 +68,7 @@ app.get('/deletesearchbyid', (req, res) => {
       return res.json({ message: err })
     }
     res.json({
-      code: 200,
+      code: 0,
       message: '删除信息成功',
       affectedRows: results.affectedRows
     })
